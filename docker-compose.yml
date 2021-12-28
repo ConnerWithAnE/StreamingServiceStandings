@@ -1,0 +1,19 @@
+version: '3'
+services:
+
+  nodeserver:
+    build: ./Backend
+    depends_on:
+      - mongostreaming
+    container_name: streamingStandingsServer
+    ports:
+      - "82:8080"
+
+  mongostreaming:
+    image: mongo
+    container_name: streamingstandingDB
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: toor
+      MONGO_INITDB_ROOT_PASSWORD: root  
