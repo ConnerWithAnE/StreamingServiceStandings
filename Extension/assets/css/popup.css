@@ -56,18 +56,104 @@ body {
     margin-bottom: 20px;
 }
 
-#sign-up-btn { 
+.button:hover {
+    background-color: #379c6f;
+}
+
+#sign-up-btn-login { 
     background-color: rgba(71, 82, 196);
     padding: 8px;
     width: 40%;
     margin-bottom: 0px;
 }
 
+#sign-up-btn-login:hover {
+    background-color: rgba(60, 69, 165);
+}
+
+#sign-up-btn {
+    background-color: rgba(71, 82, 196);
+}
+
 #sign-up-btn:hover {
     background-color: rgba(60, 69, 165);
 }
 
-.button:hover {
-    background-color: #379c6f;
+.hidden {
+    display: none;
 }
 
+
+
+
+/* Dev Tools */
+
+.dev-tools-opened {
+    border: solid lightskyblue 2px;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center; 
+}
+
+.dev-tools-closed {
+    display: flex;
+}
+
+#dev-tools-btn {
+    color: white;
+    background-color: transparent;
+    text-decoration: none;
+    padding-top: 10px;
+    padding: 3px;
+    border: solid lightskyblue 2px;
+    border-radius: 15px;
+}
+
+#dev-tools-btn:hover {
+    color: darkgrey;
+}
+
+.db-create-btn {
+    border: none;
+    background-color: white;
+    border-radius: 15px;
+    margin: 0 2px;
+}
+
+.db-create-btn:hover {
+    background-color: lightgrey;
+}
+
+ul{
+    padding: 0;
+    list-style-type: none;
+    display: flex;
+}
+
+#dev-text-output {
+    text-align: center;
+    color: darkturquoise;
+    opacity: 0;
+}
+
+.dev-fade-animation {
+    animation: dev-text-ani 5s 1;
+    animation-fill-mode: forwards;
+}
+
+@keyframes dev-text-ani {
+    0% {
+        opacity: 0;
+    }
+    15% {
+        opacity: 1;
+    }
+    75% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
