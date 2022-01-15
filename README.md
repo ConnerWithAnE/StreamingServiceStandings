@@ -1,3 +1,3 @@
 # StreamingServiceStandings
 
-A ratings system and extension for streaming services, WIP
+A streaming service ratings system with a chrome extension and database with NodeJS, WIP and public for viewing.
