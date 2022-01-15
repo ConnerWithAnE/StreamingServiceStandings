@@ -157,3 +157,24 @@ ul{
         opacity: 0;
     }
 }
+
+
+/* mainApp.html */
+
+.tabs {
+    width: 100%;
+    height: 55px;
+    list-style-type: none;
+    text-align: justify;
+    border-top: 1px solid #000;
+}
+
+.tabs li {
+    width: auto;
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    line-height: 1.5;
+    position: relative;
+    text-align: center;
+}

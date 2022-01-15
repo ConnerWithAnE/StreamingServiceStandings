@@ -12,17 +12,8 @@ let userName;
 //| Listeners |//
 //+-----------+//
 
-/* Dev Tools */
-
-document.getElementById('dev-tools-btn').addEventListener('click', handleDevTools);
-
-
-document.getElementById('dev-create-NDB').addEventListener('click', createNDB);
-document.getElementById('dev-create-DDB').addEventListener('click', createDDB);
-document.getElementById('dev-create-PDB').addEventListener('click', createPDB);
-document.getElementById('dev-create-UDB').addEventListener('click', createUDB);
-
 /* Initial Page */
+
 
 document.getElementById('sign-in-btn').addEventListener("click", userSignIn);
 document.getElementById('sign-up-btn-login').addEventListener('click', userSignUpPage);
@@ -30,33 +21,10 @@ document.getElementById('sign-up-btn-login').addEventListener('click', userSignU
   /* Sign Up Page */
 document.getElementById('sign-up-btn').addEventListener('click', userSignUp);
 
+
 //+----------------+//
 //| Page Adjusters |//
 //+----------------+//
-
-/* Dev Tools */
-
-function handleDevTools() {
-  if (document.getElementById('dev-tools').classList.contains("dev-tools-closed")) {
-    
-    document.getElementById('dev-tools-btn').style.border = "none";
-    
-    document.getElementById('dev-tools').classList.remove("dev-tools-closed");
-    document.getElementById('dev-tools').classList.add("dev-tools-opened");
-
-    document.getElementById('db-create-list').classList.remove('hidden');
-    document.getElementById('dev-text-output').classList.remove('hidden');
-
-  } else {
-    document.getElementById('dev-tools-btn').style.border = " solid lightskyblue 2px";
-    
-    document.getElementById('dev-tools').classList.remove("dev-tools-opened");
-    document.getElementById('dev-tools').classList.add("dev-tools-closed");
-
-    document.getElementById('db-create-list').classList.add('hidden');
-    document.getElementById('dev-text-output').classList.add('hidden');
-  }
-}
 
 
 /* Sign Up Page */
@@ -72,122 +40,47 @@ function userDoneSignUp() {
 }
 
 
-
 //+-----------------+//
 //| Server Requests |//
 //+-----------------+//
 
-/* Dev Tools */
+/* On Load */
 
-function createNDB() {
+
+window.onload = checkSignInStatus();
+
+
+function checkSignInStatus() {
+  console.log("Checking Sign In Status");
   new Promise((resolve, reject) => {
-    fetch(`${url}/createnetflixdatabase`, {
+    fetch(`${url}/checksignin`, {
       method: 'GET',
+      cache: 'default',
       mode: 'cors',
-      cache: 'no-cache',
+      credentials: 'include',
       headers: {
-        "Content-type": "application/json"
+        'Accept': 'application/x-www-form-urlencoded',
+        'Content-type': 'application/x-www-form-urlencoded'
       },
-      redirect: "follow",
-      referrerPolicy: "no-referrer"
-    }).then(response => resolve(response.json())).catch((err) => reject(err))
-  }).then((result) => {
-    console.log(result);
-    console.log(result.created);
-    if (result.created === true) {
-      console.log("Netflix Database Created")
-      document.getElementById('dev-text-output').innerText = 'Netflix Database Created';
-      document.getElementById('dev-text-output').classList.add('dev-fade-animation');
-      setTimeout(() => {
-        document.getElementById('dev-text-output').classList.remove('dev-fade-animation');
-      }, 5000);
+    }).then(response => {
+      console.log(response);
+      resolve(response.json())
+    })
+    .catch((err) => reject(err));
+  }).then(data => {
+    console.log(data);
+    if (data.loc != null) {
+      //window.location.href = data.loc;
     }
-  }).catch((err) => {
-    console.log(err);
-  });
+  }).catch((error) => {console.log(`Error: ${error}`)});
 }
 
-function createDDB() {
-  new Promise((resolve, reject) => {
-    fetch(`${url}/createdisneydatabase`, {
-      method: 'GET',
-      mode: 'cors',
-      cache: 'no-cache',
-      headers: {
-        "Content-type": "application/json"
-      },
-      redirect: "follow",
-      referrerPolicy: "no-referrer"
-    }).then(response => resolve(response.json())).catch((err) => reject(err))
-  }).then((result) => {
-    if (result.created === true) {
-      console.log("Disney Database Created")
-      document.getElementById('dev-text-output').innerText = 'Disney Database Created';
-      document.getElementById('dev-text-output').classList.add('dev-fade-animation');
-      setTimeout(() => {
-        document.getElementById('dev-text-output').classList.remove('dev-fade-animation');
-      }, 5000);
-    }
-  }).catch((err) => {
-    console.log(err);
-  });
-}
-
-function createPDB() {
-  new Promise((resolve, reject) => {
-    fetch(`${url}/createprimedatabase`, {
-      method: 'GET',
-      mode: 'cors',
-      cache: 'no-cache',
-      headers: {
-        "Content-type": "application/json"
-      },
-      redirect: "follow",
-      referrerPolicy: "no-referrer"
-    }).then(response => resolve(response.json())).catch((err) => reject(err))
-  }).then((result) => {
-    if (result.created === true) {
-      console.log("Prime Database Created")
-      document.getElementById('dev-text-output').innerText = 'Prime Database Created';
-      document.getElementById('dev-text-output').classList.add('dev-fade-animation');
-      setTimeout(() => {
-        document.getElementById('dev-text-output').classList.remove('dev-fade-animation');
-      }, 5000);
-    }
-  }).catch((err) => {
-    console.log(err);
-  });
-}
-
-function createUDB() {
-  new Promise((resolve, reject) => {
-    fetch(`${url}/createuserpassdatabase`, {
-      method: 'GET',
-      mode: 'cors',
-      cache: 'no-cache',
-      headers: {
-        "Content-type": "application/json"
-      },
-      redirect: "follow",
-      referrerPolicy: "no-referrer"
-    }).then(response => resolve(response.json())).catch((err) => reject(err))
-  }).then((result) => {
-    if (result.created === true) {
-      console.log("User/Pass Database Created")
-      document.getElementById('dev-text-output').innerText = 'User/Pass Database Created';
-      document.getElementById('dev-text-output').classList.add('dev-fade-animation');
-      setTimeout(() => {
-        document.getElementById('dev-text-output').classList.remove('dev-fade-animation');
-      }, 8000);
-    }
-  }).catch((err) => {
-    console.log(err);
-  });
-}
 
 /* Initial Page */
 
 function userSignIn() {
+
+  const signInd = document.getElementById('badlogin-indicator');
 
   console.log("hit");
 
@@ -195,7 +88,8 @@ function userSignIn() {
     fetch(`${url}/usersignin`, {
       method: 'POST',
       mode: 'cors',
-      cache: 'no-cache',
+      cache: 'default',
+      credentials: 'include',
       headers: {
         'Accept': 'application/x-www-form-urlencoded',
         'Content-type': 'application/x-www-form-urlencoded'
@@ -209,14 +103,16 @@ function userSignIn() {
     if (result.code === 0) {
       loggedIn = true;
       console.log("logged In");
-      window.location.href= '/mainApp.html';
+      document.cookie = 'name=guy';
+      console.log(result.cookie);
+      //window.location.href= '/mainApp.html';
     } else if (result.code === 2) {
       loggedIn = false;
-      document.getElementById('badlogin-indicator').innerText = 'Username or Password Incorrect';
-      document.getElementById('badlogin-indicator').style.opacity = 1;
+      signInd.innerText = 'Username or Password Incorrect';
+      signInd.style.opacity = 1;
     } else if (result.code === 3) {
-      document.getElementById('badlogin-indicator').innerText = 'No Account with Given Username';
-      document.getElementById('badlogin-indicator').style.opacity = 1;
+      signInd.innerText = 'No Account with Given Username';
+      signInd.style.opacity = 1;
     }
 
     console.log("Sign in Complete");
@@ -234,29 +130,22 @@ function userSignUp() {
   const userP = document.getElementById("signup-password");
   const userPR = document.getElementById("signup-password-retype");
 
-
   if (userN.value == "") {
     signInd.innerText = 'Please Enter Email';
     signInd.style.opacity = 1;
-
     return;
-  }
-  if (userP.value == "") {
+  } else if (userP.value == "") {
     signInd.innerText = 'Please Enter Password';
     signInd.style.opacity = 1;
-
     return;
-  }
-  
-  if (userP.value !== userPR.value) {
+  } else if (userP.value !== userPR.value) {
     signInd.innerText = 'Passwords do not match';
     signInd.style.opacity = 1;
-
     return;
   }
 
   signInd.style.opacity = 0;
-
+  
   new Promise((resolve, reject) => {
     fetch(`${url}/usersignup`, {
       method: 'POST',

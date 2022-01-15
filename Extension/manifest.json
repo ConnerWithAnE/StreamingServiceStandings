@@ -12,6 +12,7 @@
     "permissions": [
         "notifications",
         "scripting",
-        "tabs"
+        "tabs",
+        "cookies"
     ]
   }

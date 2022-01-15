@@ -2,6 +2,11 @@
 
 const express = require('express');
 const MongoClient = require('mongodb').MongoClient;
+
+const session = require('express-session');
+const MongoDBSession = require('connect-mongodb-session')(session);
+
+
 const cors = require('cors');
 const nodemailer = require('nodemailer');
 
@@ -15,20 +20,64 @@ const bodyParser = require("body-parser");
 const PORT = 8080;
 const HOST = '0.0.0.0';
 
-
-//Enables Server to receive from other addresses
-app.use(cors());
-
-app.use(bodyParser.urlencoded({
-    extended:true
-}));
-
 //Establishing DB connection
+
 let con;
 MongoClient.connect(url, (err, db) => {
     con = db.db("mongostreaming");
 })
 
+
+const store = new MongoDBSession({
+    uri: url,
+    databaseName: 'mongostreaming',
+    collection: 'UserSessions',
+})
+
+const isAuth = (req, res, next) => {
+    console.log("isAuth Hit: Auth Being Checked.")
+    console.log(req.session.id);
+    if (req.session.id != null) {
+        next()
+    } else {
+        res.setHeader("Access-Control-Allow-Origin", req.get("origin"));
+        res.setHeader("Access-Control-Allow-Credentials", true);
+        res.send(JSON.stringify({}));
+    }
+}
+
+
+
+
+//Enables Server to receive from other addresses
+app.use(bodyParser.urlencoded({
+    extended:true
+}))
+.use(cors({}))
+app.use(session({
+    secret: 'key that will sign',
+    cookie: {
+        secure: false
+    },
+    resave: false,
+    saveUninitialized: false,
+    store: store,
+}))
+
+
+// Website //
+
+
+// Extension //
+
+app.get("/checksignin", cors(), isAuth, (req, res) => {
+
+
+
+    res.setHeader("Access-Control-Allow-Origin", req.get("origin"));
+    res.setHeader("Access-Control-Allow-Credentials", true);
+    res.send(JSON.stringify({loc: '/mainApp.html'}));
+})
 
 app.post('/usersignin', (req, res) => {
 
@@ -39,6 +88,9 @@ app.post('/usersignin', (req, res) => {
         [*]  2 = Password is 
         [*]  3 = Username does not exist in database
     */
+
+    res.setHeader("Access-Control-Allow-Origin", req.get("origin"));
+    res.setHeader("Access-Control-Allow-Credentials", true);
 
     let user = req.body.uName;
     let pass = req.body.uPass;
@@ -64,9 +116,12 @@ app.post('/usersignin', (req, res) => {
                 const match = timingSafeEqual(hashedBuffer, keyBuffer);
 
                 if (match) {
-                    res.send(JSON.stringify({code:0}))
+                    req.session.get = true;
+                    console.log(req.session.id);
+                    res.send(JSON.stringify({code:0, cookie: {sid: req.session.id, expires: Date.now + 90000}}))
+                    //res.send(JSON.stringify({code:0}))
                 } else {
-                    res.send(JSON.stringify({code:2}))
+                    res.send(JSON.stringify({code:2}));
                 }
             })
         } else {
